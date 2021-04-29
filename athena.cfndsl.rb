@@ -40,7 +40,7 @@ CloudFormation do
         Athena_NamedQuery("#{safe_table_name}") do
           Database database
           Name FnSub("${EnvironmentName}-#{safe_table_name}")
-          QueryString FnSub("#{tbconfig['create_table_query']} #{safe_table_name}")
+          QueryString FnSub("#{tbconfig['create_table_query']}")
           WorkGroup Ref(safe_workgroup_name)
         end
 
