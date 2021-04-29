@@ -11,7 +11,7 @@ CloudFormation do
     workgroup_tags << {Key: 'EnvironmentType', Value: Ref("EnvironmentType")}
 
     Athena_WorkGroup("#{safe_workgroup_name}") do
-      Name workgroup
+      Name FnSub("${EnvironmentName}-#{safe_workgroup_name}")
       State wgconfig.has_key?('workgroup_state') ? wgconfig['workgroup_state'] : "ENABLED"
       Tags workgroup_tags
       WorkGroupConfiguration ({
@@ -28,9 +28,9 @@ CloudFormation do
 
       Athena_NamedQuery("#{safe_database_name}") do
         Database 'default'
-        Name safe_database_name
+        Name FnSub("${EnvironmentName}-#{safe_database_name}")
         QueryString dbconfig.has_key?('create_database_query') ? FnSub("#{dbconfig['create_database_query']} #{dbconfig['database_name']}") : FnSub("CREATE DATABASE #{dbconfig['database_name']}")
-        WorkGroup workgroup
+        WorkGroup Ref(safe_workgroup_name)
       end
 
       dbconfig['tables'].each do |table, tbconfig|
@@ -39,16 +39,16 @@ CloudFormation do
 
         Athena_NamedQuery("#{safe_table_name}") do
           Database database
-          Name safe_table_name
+          Name FnSub("${EnvironmentName}-#{safe_table_name}")
           QueryString FnSub("#{tbconfig['create_table_query']} #{safe_table_name}")
-          WorkGroup workgroup
+          WorkGroup Ref(safe_workgroup_name)
         end
 
         Athena_NamedQuery("ReturnAllQueryFor#{safe_table_name}") do
           Database database
           Name 'ReturnAllQuery'
           QueryString FnSub("SELECT * FROM #{dbconfig['database_name']}.#{safe_table_name}")
-          WorkGroup workgroup
+          WorkGroup Ref(safe_workgroup_name)
         end
       end if dbconfig.has_key?('tables')
     end if wgconfig.has_key?('databases')
