@@ -29,7 +29,7 @@ CloudFormation do
       Athena_NamedQuery("#{safe_database_name}") do
         Database 'default'
         Name FnSub("${EnvironmentName}-#{safe_database_name}")
-        QueryString dbconfig.has_key?('create_database_query') ? FnSub("#{dbconfig['create_database_query']} #{dbconfig['database_name']}") : FnSub("CREATE DATABASE #{dbconfig['database_name']}")
+        QueryString dbconfig.has_key?('create_database_query') ? FnSub("#{dbconfig['create_database_query']} #{safe_database_name}") : FnSub("CREATE DATABASE #{safe_database_name}}")
         WorkGroup Ref(safe_workgroup_name)
       end
 
@@ -47,7 +47,7 @@ CloudFormation do
         Athena_NamedQuery("ReturnAllQueryFor#{safe_table_name}") do
           Database database
           Name 'ReturnAllQuery'
-          QueryString FnSub("SELECT * FROM #{dbconfig['database_name']}.#{safe_table_name}")
+          QueryString FnSub("SELECT * FROM #{safe_database_name}.#{safe_table_name}")
           WorkGroup Ref(safe_workgroup_name)
         end
       end if dbconfig.has_key?('tables')
