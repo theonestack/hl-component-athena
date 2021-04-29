@@ -1,40 +1,8 @@
-# Athena CfHighlander Project
+test_metadata:
+  type: config
+  name: generic test
+  description: generic test for all basic functions
 
-## Cfhighlander Setup
-
-install cfhighlander [gem](https://github.com/theonestack/cfhighlander)
-
-```bash
-gem install cfhighlander
-```
-
-or via docker
-
-```bash
-docker pull theonestack/cfhighlander
-```
-
-Build and validate component
-
-```bash
-cfhighlander cfcompile --validate athena
-```
-
-
-
-## Parameters
-
-| Parameter        | Description                                                  | Optional |
-| ---------------- | ------------------------------------------------------------ | -------- |
-| EnvironmentName  | The name of the environment                                  | No       |
-| EnvironmentType  | The type of the environment (i.e. dev, prod, etc)            | No       |
-| S3OutputLocation | S3 bucket for saving the Athena queries run within the workgroup | No       |
-
-
-
-## Sample Configuration
-
-````yaml
 workgroups:
   SampleWG1:
     workgroup_state: DISABLED
@@ -83,4 +51,3 @@ workgroups:
               FIELDS TERMINATED BY '\t'
               LOCATION 's3://bucket.${EnvironmentName}.${AWS::AccountId}/'
               TBLPROPERTIES ( 'skip.header.line.count'='2' )
-````

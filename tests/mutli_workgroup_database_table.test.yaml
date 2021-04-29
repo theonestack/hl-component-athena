@@ -1,0 +1,42 @@
+test_metadata:
+  type: config
+  name: multi test
+  description: testing using mutliple workgroups, databases and tables
+
+workgroups:
+  SampleWG1:
+    workgroup_state: DISABLED
+    databases:
+      sampleDatabase1:
+        create_database_query: CREATE DATABASE
+        tables:
+          sampleTable1:
+            create_table_query: CREATE TABLE
+          sampleTabl2:
+            create_table_query:   CREATE EXTERNAL TABLE IF NOT EXISTS database.table (
+              FIELDS TERMINATED BY '\t'
+              LOCATION 's3://bucket.${EnvironmentName}.${AWS::AccountId}/'
+              TBLPROPERTIES ( 'skip.header.line.count'='2' )
+  SampleWG2:
+    workgroup_state: ENABLED
+    databases:
+      sampleDatabase2:
+        create_database_query: CREATE DATABASE
+        tables:
+          sampleTable3:
+            create_table_query: CREATE TABLE
+          sampleTabl4:
+            create_table_query:   CREATE EXTERNAL TABLE IF NOT EXISTS database.table (
+              FIELDS TERMINATED BY '\t'
+              LOCATION 's3://bucket.${EnvironmentName}.${AWS::AccountId}/'
+              TBLPROPERTIES ( 'skip.header.line.count'='2' )
+      sampleDatabase3:
+        create_database_query: CREATE DATABASE
+        tables:
+          sampleTable5:
+            create_table_query: CREATE TABLE
+          sampleTabl6:
+            create_table_query:   CREATE EXTERNAL TABLE IF NOT EXISTS database.table (
+              FIELDS TERMINATED BY '\t'
+              LOCATION 's3://bucket.${EnvironmentName}.${AWS::AccountId}/'
+              TBLPROPERTIES ( 'skip.header.line.count'='2' )

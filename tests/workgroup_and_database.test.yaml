@@ -1,0 +1,10 @@
+test_metadata:
+  type: config
+  name: workgroup and database
+  description: create a workgorup with a database and no tables
+workgroups:
+  SampleWG1:
+    workgroup_state: DISABLED
+    databases:
+      sampleDatabase1:
+        create_database_query: CREATE DATABASE
