@@ -1,5 +1,13 @@
 CloudFormation do
 
+  s3outputBucket = external_parameters.fetch(:S3OutputLocation, nil)
+  if s3outputBucket.nil?
+    S3_Bucket('QueryOutputBucket') do
+      s3outputBucket = FnSub("Athena-Query-Outputs-${EnvironmentName}")
+      BucketName s3outputBucket
+    end
+  end
+
   workgroups = external_parameters.fetch(:workgroups, {})
   workgroups.each do |workgroup, wgconfig|
 
@@ -16,7 +24,7 @@ CloudFormation do
       Tags workgroup_tags
       WorkGroupConfiguration ({
         ResultConfiguration: ({
-          OutputLocation: Ref('S3OutputLocation')
+          OutputLocation: s3outputBucket
         })
       })
     end
