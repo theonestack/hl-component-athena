@@ -1,11 +1,10 @@
 CloudFormation do
 
-  s3outputBucket = external_parameters.fetch(:S3OutputLocation, nil)
-  if s3outputBucket.nil?
-    S3_Bucket('QueryOutputBucket') do
-      s3outputBucket = FnSub("Athena-Query-Outputs-${EnvironmentName}")
-      BucketName s3outputBucket
-    end
+  Condition('MakeNewBucket', FnEquals(Ref('S3OutputLocation'), ''))
+
+  S3_Bucket('QueryOutputBucket') do
+    Condition('MakeNewBucket')
+    BucketName FnSub("Athena-Query-Outputs-${EnvironmentName}")
   end
 
   workgroups = external_parameters.fetch(:workgroups, {})
@@ -24,7 +23,7 @@ CloudFormation do
       Tags workgroup_tags
       WorkGroupConfiguration ({
         ResultConfiguration: ({
-          OutputLocation: s3outputBucket
+          OutputLocation: FnIf('MakeNewBucket', Ref('QueryOutputBucket'), Ref('S3OutputLocation'))
         })
       })
     end
