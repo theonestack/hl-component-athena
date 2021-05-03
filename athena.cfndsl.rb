@@ -4,7 +4,7 @@ CloudFormation do
 
   S3_Bucket('QueryOutputBucket') do
     Condition('MakeNewBucket')
-    BucketName FnSub("Athena-Query-Outputs-${EnvironmentName}")
+    BucketName FnSub("athena-query-outputs-${EnvironmentName}")
   end
 
   workgroups = external_parameters.fetch(:workgroups, {})
