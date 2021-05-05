@@ -1,12 +1,21 @@
 CloudFormation do
 
-  Condition('MakeNewBucket', FnEquals(Ref('S3OutputLocation'), ''))
-
+# Check for exisitng s3 bucket which is passed in via the cfhighlander file, if there is no bucket
+# found then create a bucket using the name in the config file or a default if a name is not found
+  Condition('MakeNewBucket', FnEquals(Ref("S3OutputLocation"), ''))
   S3_Bucket('QueryOutputBucket') do
     Condition('MakeNewBucket')
-    BucketName FnSub("athena-query-outputs-${EnvironmentName}")
+    bucket = external_parameters.fetch(:bucket, {})
+    if bucket != {}
+      BucketName bucket
+    else
+      BucketName FnSub("athena-outputs-${AWS::Region}-${EnvironmentName}-${AWS::AccountId}")
+    end
   end
 
+
+# Create a strcuture which follows that of the config files hirachy, loop though all workgroups
+# which can each contain mutliple database, each database can contain mutliple table.
   workgroups = external_parameters.fetch(:workgroups, {})
   workgroups.each do |workgroup, wgconfig|
 
