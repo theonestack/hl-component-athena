@@ -5,12 +5,8 @@ CloudFormation do
   Condition('MakeNewBucket', FnEquals(Ref("S3OutputLocation"), ''))
   S3_Bucket('QueryOutputBucket') do
     Condition('MakeNewBucket')
-    bucket = external_parameters.fetch(:bucket, {})
-    if bucket != {}
-      BucketName bucket
-    else
-      BucketName FnSub("athena-outputs-${AWS::Region}-${EnvironmentName}-${AWS::AccountId}")
-    end
+    bucket = external_parameters.fetch(:bucket, nil)
+    BucketName bucket.nil? ? FnSub("athena-outputs-${AWS::Region}-${EnvironmentName}-${AWS::AccountId}") : bucket
   end
 
 
