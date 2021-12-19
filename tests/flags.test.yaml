@@ -1,0 +1,12 @@
+test_metadata:
+  type: config
+  name: flags test
+  description: testing 2 flags wihtin the cfndsl, workgroup state and query string for database
+
+workgroups:
+  SampleWG1:
+    databases:
+      sampleDatabase1:
+        tables:
+          sampleTable1:
+            create_database_query: CREATE DATABASE

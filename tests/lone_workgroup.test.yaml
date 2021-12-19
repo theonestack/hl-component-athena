@@ -1,0 +1,8 @@
+test_metadata:
+  type: config
+  name: lone workgroup
+  description: creating a workgroup without any databases or tables
+
+workgroups:
+  SampleWG1:
+    workgroup_state: DISABLED
